@@ -5,32 +5,41 @@ This project simulates a bus operating along a predefined route using GPX data. 
 
 ---
 
-## **How the Code Works**
+## **Features**
 
 ### **1. Parsing GPX Data**
-- The `parse_gpx.py` script reads the GPX file to extract:
-  - **Waypoints (`<wpt>`)**: Represent bus stops.
-  - **Track Points (`<trkpt>`)**: Represent the path the bus follows between stops.
-- The parsed data is returned as a dictionary with `waypoints` and `track_points`.
+- **`parse_gpx.py`**:
+  - Extracts:
+    - **Waypoints (`<wpt>`)**: Represent bus stops.
+    - **Track Points (`<trkpt>`)**: Represent the path the bus follows between stops.
+  - Returns the data as a dictionary with `waypoints` and `track_points`.
 
-### **2. Authentication**
+---
+
+### **2. Simulating Movement**
+- **`simulate_bus` Function**:
+  - Iterates through the `track_points` and sends:
+    - **Driving Updates**: Current position and state (`Driving`) of the vehicle.
+    - **Stop Updates**: Indicates when the vehicle reaches a waypoint (`At Stop`).
+  - Adds delays to simulate real-time behavior.
+
+---
+
+### **2. Authentication(*CURRENT NOT IN USE*)**
 - The script authenticates with the API using the provided username and password.
 - An access token is retrieved and used for all subsequent API calls.
 
-### **3. Startup**
-- The `startup_vehicle` function sends a request to activate the vehicle on the specified route. This initializes the vehicle in the backend system and prepares it for tracking.
+---
 
-### **4. Simulating Movement**
-- The `simulate_bus` function:
-  1. Iterates through the track points and sends location updates (`Current State` API calls).
-  2. Detects when the vehicle reaches a waypoint (bus stop) and sends an `At Stop` API call.
-  3. Adds a delay (`time.sleep`) between updates to mimic real-time movement.
+### **4. API Interaction**
+- **Driver Location API**:
+  - **POST**:
+    - Sends real-time updates about the vehicle’s location and state.
+    - Payload includes:
+      - Latitude and longitude.
+      - Current route, driver, and vehicle identifiers.
+      - Vehicle state (`Driving` or `At Stop`).
+      - The next waypoint, capacity, and tenant key.
+  - Simulated responses are printed for debugging and testing (Logging can be implemented if needed).
 
-### **5. Shutdown**
-- The `shutdown_vehicle` function sends a request to deactivate the vehicle. This signals the end of the route and marks the vehicle as inactive.
-
-
-## **Next Steps**
-1. Add structured logging to track simulation progress and API responses.
-2. Extend functionality for simultaneous testing of multiple vehicles/routes.
-3. Adjust for multiple GPX files to be read
+---
